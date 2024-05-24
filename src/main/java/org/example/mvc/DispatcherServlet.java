@@ -3,6 +3,7 @@ package org.example.mvc;
 import org.example.mvc.controller.Controller;
 import org.example.mvc.controller.RequestMethod;
 import org.example.mvc.view.JspViewResolver;
+import org.example.mvc.view.ModelAndView;
 import org.example.mvc.view.View;
 import org.example.mvc.view.ViewResolver;
 import org.slf4j.Logger;
@@ -25,12 +26,14 @@ public class DispatcherServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(DispatcherServlet.class);
     private RequestMappingHandler requestMappingHandler;
     private List<ViewResolver> viewResolvers;
+    private List<HandlerAdapter> handlerAdapters;
 
     @Override
     public void init() throws ServletException {
         requestMappingHandler = new RequestMappingHandler();
         requestMappingHandler.init();
         viewResolvers = Collections.singletonList(new JspViewResolver());
+        handlerAdapters = List.of(new SimpleControllerHandlerAdapter());
     }
 
     @Override
@@ -38,11 +41,17 @@ public class DispatcherServlet extends HttpServlet {
         log.info("[DispatcherServlet] service started.");
         try {
             Controller handler = requestMappingHandler.findHandler(new HandlerKey(RequestMethod.valueOf(request.getMethod()), request.getRequestURI()));
-            String viewName = handler.handleRequest(request, response);
+
+            HandlerAdapter handlerAdapter = handlerAdapters.stream()
+                    .filter(ha -> ha.supports(handler))
+                    .findFirst()
+                    .orElseThrow(() -> new ServletException("No adapter for handler [" + handler + "]"));
+
+            ModelAndView modelAndView = handlerAdapter.handle(request, response, handler);
 
             for (ViewResolver viewResolver : viewResolvers) {
-                View view = viewResolver.resolveView(viewName);
-                view.render(new HashMap<>(), request, response);
+                View view = viewResolver.resolveView(modelAndView.getViewName());
+                view.render(modelAndView.getModel(), request, response);
             }
         } catch (Exception e) {
             log.error("exception occurred: [{}]", e.getMessage(), e);
