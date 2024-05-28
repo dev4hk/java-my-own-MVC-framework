@@ -27,4 +27,11 @@ This project is to mimic the MVC framework in Spring, which is to handle request
 - Forward - passes request to another servlet (doesn't pass through client again), so there is no new HttpServletRequest object
 - Redirect - passes request through client to another servlet, so there is a new HttpServletRequest & HttpServletResponse
 
+## Screenshots
 
+- home.jsp from HomeController (localhost:8080)
+  ![home](images/home.png)
+- form.jsp from ForwardController (localhost:8080/user/form)
+  ![home](images/userForm.png)
+- list.jsp from UserListController (localhost:8080/users)
+  ![home](images/userList.png)
