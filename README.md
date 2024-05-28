@@ -4,7 +4,7 @@ This project is to mimic the MVC framework in Spring, which is to handle request
 
 ## Features
 
-- Implemented using Front Controller Pattern like in Spring Web MVC Framework, where Dispatcher Servlet is the first and only point of contact in the backend side as a request handler
+- Implemented using Front Controller Pattern as Spring Web MVC Framework does, where Dispatcher Servlet is the first and only point of contact in the backend side when a request is received from the client side
 - Handles requests from client and send views (JSP) as response
 
 ## Flow
