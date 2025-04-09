@@ -5,6 +5,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="data:;base64,=">
     <title>list</title>
 </head>
 <body>
